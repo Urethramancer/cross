@@ -8,33 +8,39 @@ import (
 	"path/filepath"
 )
 
-// GetConfigName gets the correct full path of the configuration file for command line tools.
-func GetConfigName(program, filename string) (string, error) {
+// SetBasePath builds the appropriate path for saving program-specific directories.
+func SetBasePath() {
 	u, err := user.Current()
 	if err != nil {
-		return "", err
+		return
 	}
 
-	dir := filepath.Join(u.HomeDir, "."+program)
+	basepath = u.HomeDir
+}
+
+// SetConfigPath builds the path to the command line program config directory.
+func SetConfigPath(program string) {
+	dir := filepath.Join(basepath, "."+program)
 	if !Exists(dir) {
 		err := os.MkdirAll(dir, 0700)
 		if err != nil {
-			return "", err
+			configpath = basepath
+			return
 		}
 	}
 
-	return filepath.Join(dir, filename), nil
+	configpath = dir
 }
 
 // GetServerConfigName gets the correct full path of the configuration file for servers.
-func GetServerConfigName(program, filename string) (string, error) {
+func ServerConfigName(program, filename string) string {
 	dir := filepath.Join("/etc", program)
 	if !Exists(dir) {
 		err := os.MkdirAll(dir, 0700)
 		if err != nil {
-			return "", err
+			return filename
 		}
 	}
 
-	return filepath.Join(dir, filename), nil
+	return filepath.Join(dir, filename)
 }
