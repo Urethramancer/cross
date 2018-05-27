@@ -4,10 +4,16 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 )
 
 // SetBasePath builds the appropriate path for saving program-specific directories.
 func SetBasePath() {
+	if IsRoot() {
+		basepath = "/etc"
+		return
+	}
+
 	u, err := user.Current()
 	if err != nil {
 		return
@@ -26,7 +32,15 @@ func SetBasePath() {
 
 // SetConfigPath builds the path to the command line program config directory.
 func SetConfigPath(program string) {
-	dir := filepath.Join(basepath, program)
+	program = strings.Replace(program, " ", "", -1)
+	dir := ""
+
+	if IsRoot() {
+		dir = filepath.Join(basepath, program)
+	} else {
+		dir = filepath.Join(basepath, "."+program)
+	}
+
 	if !Exists(dir) {
 		err := os.MkdirAll(dir, 0700)
 		if err != nil {
