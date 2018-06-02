@@ -38,7 +38,7 @@ func SetConfigPath(program string) {
 	if IsRoot() {
 		dir = filepath.Join(basepath, program)
 	} else {
-		dir = filepath.Join(basepath, "."+program)
+		dir = filepath.Join(basepath, program)
 	}
 
 	if !Exists(dir) {
