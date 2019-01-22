@@ -46,6 +46,22 @@ func SetConfigPath(program string) {
 	configpath = dir
 }
 
+// SetServerConfigPath builds the path to the server config directory, bypassing automatically selected paths.
+func SetServerConfigPath(program string) {
+	program = strings.Replace(program, " ", "", -1)
+	dir := filepath.Join("/etc", program)
+
+	if !Exists(dir) {
+		err := os.MkdirAll(dir, 0700)
+		if err != nil {
+			configpath = basepath
+			return
+		}
+	}
+
+	configpath = dir
+}
+
 // GetServerConfigName gets the correct full path of the configuration file for servers.
 func ServerConfigName(program, filename string) string {
 	program = strings.Replace(program, " ", "", -1)

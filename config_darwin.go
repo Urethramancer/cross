@@ -52,6 +52,11 @@ func SetConfigPath(program string) {
 	configpath = dir
 }
 
+// SetServerConfigPath builds the path to the server config directory, bypassing automatically selected paths.
+func SetServerConfigPath(program string) {
+	SetConfigPath(program)
+}
+
 // GetServerConfigName gets the correct full path of the configuration file for servers.
 func ServerConfigName(filename string) string {
 	return ConfigName(filename)
