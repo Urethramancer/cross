@@ -33,23 +33,15 @@ func SetBasePath() {
 // SetConfigPath builds the path to the command line program config directory.
 func SetConfigPath(program string) {
 	program = strings.Replace(program, " ", "", -1)
-	dir := ""
+	configpath = filepath.Join(basepath, program)
 
-	if IsRoot() {
-		dir = filepath.Join(basepath, program)
-	} else {
-		dir = filepath.Join(basepath, program)
-	}
-
-	if !Exists(dir) {
-		err := os.MkdirAll(dir, 0700)
+	if !Exists(configpath) {
+		err := os.MkdirAll(configpath, 0700)
 		if err != nil {
 			configpath = basepath
 			return
 		}
 	}
-
-	configpath = dir
 }
 
 // SetServerConfigPath builds the path to the server config directory, bypassing automatically selected paths.
